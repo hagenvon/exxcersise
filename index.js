@@ -1,7 +1,7 @@
 const { makeFindMin } = require("./utils");
 const { csv } = require("./fileReader");
 
-async function weatherApp() {
+async function weatherTask() {
   // get data
   const weatherData = await csv("/ressources/weather.csv");
 
@@ -19,4 +19,24 @@ async function weatherApp() {
   console.log("Day(s) with smallest temperature spread: ", result);
 }
 
-weatherApp();
+async function footballTask() {
+  // get data
+  const footballData = await csv("/ressources/football.csv");
+
+  // helpers
+  const absoluteGoalDifference = team =>
+    Math.abs(team["Goals"] - team["Goals Allowed"]);
+  const findBySmallestGoalDifference = makeFindMin(absoluteGoalDifference);
+  const getTeam = ({ Team }) => Team;
+
+  // get result
+  const result = footballData
+    .reduce(findBySmallestGoalDifference, [])
+    .map(getTeam);
+
+  // output
+  console.log("Teams(s) with smallest absolute goal difference: ", result);
+}
+
+weatherTask();
+footballTask();
