@@ -1,8 +1,22 @@
-/*
- *
- * get data from file as aaray of object
- * find list of records with lowest value with something like "minby"
- * get given property from found record
- * log property
- *
- * */
+const { makeFindMin } = require("./utils");
+const { csv } = require("./fileReader");
+
+async function weatherApp() {
+  // get data
+  const weatherData = await csv("/ressources/weather.csv");
+
+  // helpers
+  const temperatureSpread = ({ MxT, MnT }) => MxT - MnT;
+  const findBySmallestTemperatureSpread = makeFindMin(temperatureSpread);
+  const getDay = ({ Day }) => Day;
+
+  // get result
+  const result = weatherData
+    .reduce(findBySmallestTemperatureSpread, [])
+    .map(getDay);
+
+  // output
+  console.log("Day(s) with smallest temperature spread: ", result);
+}
+
+weatherApp();
