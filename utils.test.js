@@ -6,7 +6,7 @@ const list_b = [{ a: 2, b: 2 }, { a: 2, b: 2 }, { a: 5, b: 5 }];
 describe("makeFindMin()", () => {
   it("should find one item with lowest b", () => {
     const findMinB = makeFindMin(item => item.b);
-    const actual = list.reduce(findMinB, []);
+    const actual = findMinB(list);
     const expected = [{ a: 3, b: 2 }];
 
     expect(actual).toEqual(expected);
@@ -14,23 +14,23 @@ describe("makeFindMin()", () => {
 
   it("should find two items with lowest b", () => {
     const findMinB = makeFindMin(item => item.b);
-    const actual = list_b.reduce(findMinB, []);
+    const actual = findMinB(list_b);
     const expected = [{ a: 2, b: 2 }, { a: 2, b: 2 }];
 
     expect(actual).toEqual(expected);
   });
 
   it("should find one item with lowest diff a-b", () => {
-    const findMinB = makeFindMin(item => item.a - item.b);
-    const actual = list.reduce(findMinB, []);
+    const findMinDiffAB = makeFindMin(item => item.a - item.b);
+    const actual = findMinDiffAB(list);
     const expected = [{ a: 6, b: 8 }];
 
     expect(actual).toEqual(expected);
   });
 
   it("should find three item with lowest diff a-b", () => {
-    const findMinB = makeFindMin(item => item.a - item.b);
-    const actual = list_b.reduce(findMinB, []);
+    const findMinDiffAB = makeFindMin(item => item.a - item.b);
+    const actual = findMinDiffAB(list_b);
     const expected = [{ a: 2, b: 2 }, { a: 2, b: 2 }, { a: 5, b: 5 }];
 
     expect(actual).toEqual(expected);

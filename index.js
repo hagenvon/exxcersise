@@ -1,4 +1,4 @@
-const { makeFindMin } = require("./utils");
+const { makeFindMin, makeProcessAll, pipe, printResult } = require("./utils");
 const { csv } = require("./fileReader");
 
 async function weatherTask() {
@@ -8,15 +8,14 @@ async function weatherTask() {
   // helpers
   const temperatureSpread = ({ MxT, MnT }) => MxT - MnT;
   const findBySmallestTemperatureSpread = makeFindMin(temperatureSpread);
-  const getDay = ({ Day }) => Day;
+  const getDay = makeProcessAll(({ Day }) => Day);
 
-  // get result
-  const result = weatherData
-    .reduce(findBySmallestTemperatureSpread, [])
-    .map(getDay);
-
-  // output
-  console.log("Day(s) with smallest temperature spread: ", result);
+  // get result & output
+  return pipe(
+      findBySmallestTemperatureSpread,
+      getDay,
+      printResult("Day(s) with smallest temperature spread: ")
+  )(weatherData);
 }
 
 async function footballTask() {
@@ -25,17 +24,16 @@ async function footballTask() {
 
   // helpers
   const absoluteGoalDifference = team =>
-    Math.abs(team["Goals"] - team["Goals Allowed"]);
+      Math.abs(team["Goals"] - team["Goals Allowed"]);
   const findBySmallestGoalDifference = makeFindMin(absoluteGoalDifference);
-  const getTeam = ({ Team }) => Team;
+  const getTeam = makeProcessAll(({ Team }) => Team);
 
-  // get result
-  const result = footballData
-    .reduce(findBySmallestGoalDifference, [])
-    .map(getTeam);
-
-  // output
-  console.log("Teams(s) with smallest absolute goal difference: ", result);
+  // get result & output
+  return pipe(
+      findBySmallestGoalDifference,
+      getTeam,
+      printResult("Teams(s) with smallest absolute goal difference: ")
+  )(footballData);
 }
 
 weatherTask();
